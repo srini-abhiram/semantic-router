@@ -47,6 +47,19 @@ type MatchResult struct {
 
 // NewRegexProvider creates a new RegexProvider.
 func NewRegexProvider(cfg RegexProviderConfig, options ...func(*RegexProvider)) (*RegexProvider, error) {
+	if cfg.MaxPatterns == 0 {
+		cfg.MaxPatterns = 100
+	}
+	if cfg.MaxPatternLength == 0 {
+		cfg.MaxPatternLength = 1000
+	}
+	if cfg.MaxInputLength == 0 {
+		cfg.MaxInputLength = 10000
+	}
+	if cfg.DefaultTimeoutMs == 0 {
+		cfg.DefaultTimeoutMs = 100
+	}
+
 	if len(cfg.Patterns) > cfg.MaxPatterns {
 		return nil, fmt.Errorf("number of patterns (%d) exceeds max_patterns (%d)", len(cfg.Patterns), cfg.MaxPatterns)
 	}
@@ -55,6 +68,10 @@ func NewRegexProvider(cfg RegexProviderConfig, options ...func(*RegexProvider)) 
 	for _, p := range cfg.Patterns {
 		if len(p.Pattern) > cfg.MaxPatternLength {
 			return nil, fmt.Errorf("pattern length for ID '%s' (%d) exceeds max_pattern_length (%d)", p.ID, len(p.Pattern), cfg.MaxPatternLength)
+		}
+
+		if p.Flags != "" && p.Flags != "i" {
+			return nil, fmt.Errorf("unsupported flags for pattern ID '%s': '%s'. Only 'i' is supported", p.ID, p.Flags)
 		}
 
 		pattern := p.Pattern
@@ -92,10 +109,9 @@ func WithTestDelay(d time.Duration) func(*RegexProvider) {
 
 // Scan scans the input string for matches.
 // The scan is performed in a separate goroutine and is subject to a timeout.
-// The timeout check is performed between each pattern, so a single very slow
-// pattern can still block for longer than the timeout. However, Go's regex
-// engine is very fast and not vulnerable to ReDoS, so this is not a major
-// concern in practice.
+// The overall Scan operation will not exceed the timeout. The timeout check is
+// performed between each pattern. Given Go's ReDoS-safe regex engine, individual
+// pattern matching is not expected to block for a long time.
 func (rp *RegexProvider) Scan(input string) ([]MatchResult, error) {
 	if len(input) > rp.maxInputLength {
 		return nil, fmt.Errorf("input length (%d) exceeds max_input_length (%d)", len(input), rp.maxInputLength)
