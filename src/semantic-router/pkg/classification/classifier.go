@@ -596,8 +596,10 @@ func (c *Classifier) initializePIIClassifier() error {
 }
 
 // SignalResults contains all evaluated signal results
+// SignalResults contains all evaluated signal results
 type SignalResults struct {
 	MatchedKeywordRules   []string
+	MatchedKeywords       map[string][]string // Matched keywords for each rule
 	MatchedEmbeddingRules []string
 	MatchedDomainRules    []string
 	MatchedFactCheckRules []string // "needs_fact_check" or "no_fact_check_needed"
@@ -616,15 +618,20 @@ func (c *Classifier) EvaluateAllRules(text string) ([]string, []string, []string
 // EvaluateAllSignals evaluates all signal types and returns SignalResults
 // This is the new method that includes fact_check signals
 func (c *Classifier) EvaluateAllSignals(text string) *SignalResults {
-	results := &SignalResults{}
+	results := &SignalResults{
+		MatchedKeywords: make(map[string][]string),
+	}
 
 	// Evaluate keyword rules - check each rule individually
 	if c.keywordClassifier != nil {
-		category, _, err := c.keywordClassifier.Classify(text)
+		matches, err := c.keywordClassifier.FindAllMatches(text)
 		if err != nil {
 			logging.Errorf("keyword rule evaluation failed: %v", err)
-		} else if category != "" {
-			results.MatchedKeywordRules = append(results.MatchedKeywordRules, category)
+		} else {
+			for _, match := range matches {
+				results.MatchedKeywordRules = append(results.MatchedKeywordRules, match.RuleName)
+				results.MatchedKeywords[match.RuleName] = match.Keywords
+			}
 		}
 	}
 

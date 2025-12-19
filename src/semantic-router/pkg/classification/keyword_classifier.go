@@ -85,12 +85,20 @@ func NewKeywordClassifier(cfgRules []config.KeywordRule) (*KeywordClassifier, er
 	return &KeywordClassifier{rules: preppedRules}, nil
 }
 
-// Classify performs keyword-based classification on the given text.
-func (c *KeywordClassifier) Classify(text string) (string, float64, error) {
+// KeywordMatch represents a matched rule and its keywords
+type KeywordMatch struct {
+	RuleName string
+	Keywords []string
+}
+
+// FindAllMatches performs keyword-based classification and returns all matching rules.
+func (c *KeywordClassifier) FindAllMatches(text string) ([]KeywordMatch, error) {
+	var matches []KeywordMatch
+
 	for _, rule := range c.rules {
-		matched, keywords, err := c.matches(text, rule) // Error handled
+		matched, keywords, err := c.matches(text, rule)
 		if err != nil {
-			return "", 0.0, err // Propagate error
+			return nil, err
 		}
 		if matched {
 			if len(keywords) > 0 {
@@ -98,8 +106,25 @@ func (c *KeywordClassifier) Classify(text string) (string, float64, error) {
 			} else {
 				logging.Infof("Keyword-based classification matched rule %q with a NOR rule.", rule.Name)
 			}
-			return rule.Name, 1.0, nil
+			matches = append(matches, KeywordMatch{
+				RuleName: rule.Name,
+				Keywords: keywords,
+			})
 		}
+	}
+	return matches, nil
+}
+
+// Classify performs keyword-based classification on the given text.
+// It returns the first matching rule for backward compatibility.
+func (c *KeywordClassifier) Classify(text string) (string, float64, error) {
+	matches, err := c.FindAllMatches(text)
+	if err != nil {
+		return "", 0.0, err
+	}
+
+	if len(matches) > 0 {
+		return matches[0].RuleName, 1.0, nil
 	}
 	return "", 0.0, nil
 }

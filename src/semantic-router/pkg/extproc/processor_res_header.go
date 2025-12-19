@@ -112,6 +112,16 @@ func (r *OpenAIRouter) handleResponseHeaders(v *ext_proc.ProcessingRequest_Respo
 			})
 		}
 
+		// Add x-vsr-matched-keywords header
+		if len(ctx.VSRMatchedKeywords) > 0 {
+			setHeaders = append(setHeaders, &core.HeaderValueOption{
+				Header: &core.HeaderValue{
+					Key:      headers.VSRMatchedKeywords,
+					RawValue: []byte(strings.Join(ctx.VSRMatchedKeywords, ",")),
+				},
+			})
+		}
+
 		// Add x-vsr-injected-system-prompt header
 		injectedValue := "false"
 		if ctx.VSRInjectedSystemPrompt {

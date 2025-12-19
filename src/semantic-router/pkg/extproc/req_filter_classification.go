@@ -65,6 +65,8 @@ func (r *OpenAIRouter) performDecisionEvaluationAndModelSelection(originalModel 
 	// Store the selected decision in context for later use (e.g., plugins, header mutations)
 	// This is critical for hallucination detection and other per-decision plugins
 	ctx.VSRSelectedDecision = result.Decision
+	// Store matched keywords in context for header injection
+	ctx.VSRMatchedKeywords = result.MatchedKeywords
 
 	// Extract domain category from matched rules (for VSRSelectedCategory header)
 	// MatchedRules contains rule names like "domain:math", "keyword:thinking", etc.

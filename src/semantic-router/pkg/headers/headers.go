@@ -42,6 +42,10 @@ const (
 	// Example values: "deepseek-v31", "phi4", "gpt-4"
 	VSRSelectedModel = "x-vsr-selected-model"
 
+	// VSRMatchedKeywords indicates the keywords that matched the request.
+	// Value: comma-separated list of keywords
+	VSRMatchedKeywords = "x-vsr-matched-keywords"
+
 	// VSRInjectedSystemPrompt indicates whether a system prompt was injected into the request.
 	// Values: "true" or "false"
 	VSRInjectedSystemPrompt = "x-vsr-injected-system-prompt"

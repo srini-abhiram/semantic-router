@@ -55,17 +55,19 @@ func NewDecisionEngine(
 
 // SignalMatches contains all matched signals for decision evaluation
 type SignalMatches struct {
-	KeywordRules   []string
-	EmbeddingRules []string
-	DomainRules    []string
-	FactCheckRules []string // "needs_fact_check" or "no_fact_check_needed"
+	KeywordRules    []string
+	MatchedKeywords map[string][]string // Map of RuleName -> matched keywords
+	EmbeddingRules  []string
+	DomainRules     []string
+	FactCheckRules  []string // "needs_fact_check" or "no_fact_check_needed"
 }
 
 // DecisionResult represents the result of decision evaluation
 type DecisionResult struct {
-	Decision     *config.Decision
-	Confidence   float64
-	MatchedRules []string
+	Decision        *config.Decision
+	Confidence      float64
+	MatchedRules    []string
+	MatchedKeywords []string // Aggregated unique keywords that triggered this decision
 }
 
 // EvaluateDecisions evaluates all decisions and returns the best match based on strategy
@@ -77,12 +79,14 @@ func (e *DecisionEngine) EvaluateDecisions(
 	matchedEmbeddingRules []string,
 	matchedDomainRules []string,
 ) (*DecisionResult, error) {
-	// Call EvaluateDecisionsWithSignals with empty fact_check rules for backward compatibility
+	// Call EvaluateDecisionsWithSignals with empty fact_check rules and empty keywords map
+	// Note: This legacy method doesn't support specific matched keywords
 	return e.EvaluateDecisionsWithSignals(&SignalMatches{
-		KeywordRules:   matchedKeywordRules,
-		EmbeddingRules: matchedEmbeddingRules,
-		DomainRules:    matchedDomainRules,
-		FactCheckRules: nil,
+		KeywordRules:    matchedKeywordRules,
+		MatchedKeywords: make(map[string][]string),
+		EmbeddingRules:  matchedEmbeddingRules,
+		DomainRules:     matchedDomainRules,
+		FactCheckRules:  nil,
 	})
 }
 
@@ -101,10 +105,25 @@ func (e *DecisionEngine) EvaluateDecisionsWithSignals(signals *SignalMatches) (*
 		matched, confidence, matchedRules := e.evaluateDecisionWithSignals(decision, signals)
 
 		if matched {
+			// Aggregate keywords from matched rules
+			var keywords []string
+			if len(signals.MatchedKeywords) > 0 {
+				for _, ruleStr := range matchedRules {
+					// ruleStr is like "keyword:ruleName"
+					if len(ruleStr) > 8 && ruleStr[:8] == "keyword:" {
+						ruleName := ruleStr[8:]
+						if kws, ok := signals.MatchedKeywords[ruleName]; ok {
+							keywords = append(keywords, kws...)
+						}
+					}
+				}
+			}
+
 			results = append(results, DecisionResult{
-				Decision:     decision,
-				Confidence:   confidence,
-				MatchedRules: matchedRules,
+				Decision:        decision,
+				Confidence:      confidence,
+				MatchedRules:    matchedRules,
+				MatchedKeywords: keywords,
 			})
 		}
 	}

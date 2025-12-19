@@ -59,6 +59,7 @@ type RequestContext struct {
 	VSRCacheHit             bool             // Whether this request hit the cache
 	VSRInjectedSystemPrompt bool             // Whether a system prompt was injected into the request
 	VSRSelectedDecision     *config.Decision // The decision object selected by DecisionEngine (for plugins)
+	VSRMatchedKeywords      []string         // Keywords that matched the request
 
 	// Endpoint tracking for windowed metrics
 	SelectedEndpoint string // The endpoint address selected for this request
