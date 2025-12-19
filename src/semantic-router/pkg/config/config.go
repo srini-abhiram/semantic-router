@@ -172,6 +172,9 @@ type CategoryModel struct {
 	UseCPU              bool    `yaml:"use_cpu"`
 	UseModernBERT       bool    `yaml:"use_modernbert"`
 	CategoryMappingPath string  `yaml:"category_mapping_path"`
+	// FallbackCategory is returned when classification confidence is below threshold.
+	// Default is "other" if not specified.
+	FallbackCategory string `yaml:"fallback_category,omitempty"`
 }
 
 type PIIModel struct {
@@ -526,9 +529,6 @@ type FactCheckModelConfig struct {
 
 	// Use CPU for inference
 	UseCPU bool `yaml:"use_cpu"`
-
-	// Path to fact-check label mapping file (JSON format)
-	MappingPath string `yaml:"mapping_path"`
 }
 
 // HallucinationModelConfig represents configuration for hallucination detection model
