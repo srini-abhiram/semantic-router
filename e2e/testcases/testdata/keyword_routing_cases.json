@@ -3,7 +3,7 @@
     "name": "OR operator - single keyword urgent",
     "description": "Test OR operator with 'urgent' keyword",
     "query": "I need urgent help with my account",
-    "expected_category": "urgent_request",
+    "expected_category": "urgent_request_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "urgent"
@@ -13,7 +13,7 @@
     "name": "OR operator - immediate keyword",
     "description": "Test OR operator with 'immediate' keyword",
     "query": "This requires immediate attention",
-    "expected_category": "urgent_request",
+    "expected_category": "urgent_request_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "immediate"
@@ -23,7 +23,7 @@
     "name": "OR operator - asap keyword",
     "description": "Test OR operator with 'asap' keyword",
     "query": "Please respond asap to this request",
-    "expected_category": "urgent_request",
+    "expected_category": "urgent_request_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "asap"
@@ -33,7 +33,7 @@
     "name": "OR operator - emergency keyword",
     "description": "Test OR operator with 'emergency' keyword",
     "query": "This is an emergency situation",
-    "expected_category": "urgent_request",
+    "expected_category": "urgent_request_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "emergency"
@@ -43,7 +43,7 @@
     "name": "AND operator - all keywords present",
     "description": "Test AND operator with SSN and credit card",
     "query": "My SSN and credit card were stolen",
-    "expected_category": "sensitive_data",
+    "expected_category": "sensitive_data_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "SSN",
@@ -54,7 +54,7 @@
     "name": "AND operator - partial match falls back to NOR",
     "description": "Test AND operator with only SSN - falls back to exclude_spam NOR rule",
     "query": "My SSN was stolen",
-    "expected_category": "exclude_spam",
+    "expected_category": "exclude_spam_decision",
     "expected_confidence": 1.0,
     "matched_keywords": []
   },
@@ -62,7 +62,7 @@
     "name": "AND operator - partial match falls back to NOR (credit card only)",
     "description": "Test AND operator with only credit card - falls back to exclude_spam NOR rule",
     "query": "My credit card was stolen",
-    "expected_category": "exclude_spam",
+    "expected_category": "exclude_spam_decision",
     "expected_confidence": 1.0,
     "matched_keywords": []
   },
@@ -70,7 +70,7 @@
     "name": "AND operator - keywords in different order",
     "description": "Test AND operator with reversed keyword order",
     "query": "My credit card and SSN were compromised",
-    "expected_category": "sensitive_data",
+    "expected_category": "sensitive_data_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "SSN",
@@ -81,7 +81,7 @@
     "name": "Case insensitive - uppercase URGENT",
     "description": "Test case insensitive matching with uppercase",
     "query": "This is URGENT",
-    "expected_category": "urgent_request",
+    "expected_category": "urgent_request_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "urgent"
@@ -91,7 +91,7 @@
     "name": "Case insensitive - mixed case Urgent",
     "description": "Test case insensitive matching with mixed case",
     "query": "This is Urgent",
-    "expected_category": "urgent_request",
+    "expected_category": "urgent_request_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "urgent"
@@ -101,7 +101,7 @@
     "name": "Case insensitive - lowercase urgent",
     "description": "Test case insensitive matching with lowercase",
     "query": "this is very urgent please help",
-    "expected_category": "urgent_request",
+    "expected_category": "urgent_request_decision",
     "expected_confidence": 1.0,
     "matched_keywords": [
       "urgent"
