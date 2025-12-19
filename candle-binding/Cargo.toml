@@ -11,7 +11,7 @@ name = "candle_semantic_router"
 crate-type = ["rlib", "staticlib", "cdylib"]
 
 [features]
-default = ["cuda"]
+default = []
 # CUDA support (enables GPU acceleration)
 cuda = ["candle-core/cuda", "candle-nn/cuda", "candle-transformers/cuda"]
 # Flash Attention 2 support (requires CUDA and compatible GPU)

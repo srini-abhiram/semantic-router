@@ -101,10 +101,4 @@
     "name": "Case insensitive - lowercase urgent",
     "description": "Test case insensitive matching with lowercase",
     "query": "this is very urgent please help",
-    "expected_category": "urgent_request_decision",
-    "expected_confidence": 1.0,
-    "matched_keywords": [
-      "urgent"
-    ]
-  }
-]
+    "expected_category": "urgent_requ

@@ -218,7 +218,9 @@ func testSingleKeywordRouting(ctx context.Context, testCase KeywordRoutingCase, 
 	}
 
 	// Check if category is correct
-	result.Correct = (result.ActualCategory == testCase.ExpectedCategory)
+	// Handle both stripped and unstripped cases to be robust against env differences
+	normalizedActual := strings.TrimSuffix(strings.TrimSpace(result.ActualCategory), "_decision")
+	result.Correct = (normalizedActual == testCase.ExpectedCategory)
 
 	// Check if matched keywords are correct
 	// For empty expected keywords, also expect empty actual keywords

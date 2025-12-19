@@ -1,0 +1,20 @@
+FROM semantic-router-dev:latest
+
+# Install kind
+RUN curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64" && \
+    chmod +x ./kind && \
+    mv ./kind /usr/local/bin/kind
+
+# Install kubectl
+RUN echo '[kubernetes]' > /etc/yum.repos.d/kubernetes.repo && \
+    echo 'name=Kubernetes' >> /etc/yum.repos.d/kubernetes.repo && \
+    echo 'baseurl=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/' >> /etc/yum.repos.d/kubernetes.repo && \
+    echo 'enabled=1' >> /etc/yum.repos.d/kubernetes.repo && \
+    echo 'gpgcheck=1' >> /etc/yum.repos.d/kubernetes.repo && \
+    echo 'gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key' >> /etc/yum.repos.d/kubernetes.repo && \
+    dnf install -y kubectl
+
+# Install Docker CLI
+RUN dnf install -y dnf-plugins-core && \
+    dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
+    dnf install -y docker-ce-cli

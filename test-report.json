@@ -1,0 +1,26 @@
+{
+  "profile": "dynamic-config",
+  "start_time": "2025-11-24T04:30:54.72888214Z",
+  "end_time": "2025-11-24T04:37:07.592247473Z",
+  "duration": "6m12s",
+  "status": "FAILED",
+  "exit_code": 1,
+  "cluster_name": "semantic-router-e2e",
+  "test_results": null,
+  "total_tests": 0,
+  "passed_tests": 0,
+  "failed_tests": 0,
+  "cluster_info": {
+    "total_pods": 0,
+    "running_pods": 0,
+    "pending_pods": 0,
+    "failed_pods": 0,
+    "namespaces": null,
+    "pods_by_namespace": null
+  },
+  "environment": {
+    "go_version": "1.24",
+    "parallel": "false",
+    "verbose": "true"
+  }
+}

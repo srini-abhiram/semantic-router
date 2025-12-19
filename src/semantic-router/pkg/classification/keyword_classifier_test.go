@@ -3,7 +3,6 @@ package classification
 import (
 	"testing"
 
-
 	"github.com/vllm-project/semantic-router/src/semantic-router/pkg/config"
 )
 
@@ -34,7 +33,7 @@ func TestKeywordClassifier_Classify_FindsAll(t *testing.T) {
 	// Current expected behavior (bug): Classify returns only first match
 	// Desired behavior: Classify (or new method) returns both "rule1" and "rule2"
 	// For now, let's verify what Classify returns.
-	
+
 	// Verify FindAllMatches finds BOTH rules
 	matches, err := classifier.FindAllMatches(text)
 	if err != nil {

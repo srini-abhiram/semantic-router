@@ -154,13 +154,18 @@ func (c *KeywordClassifier) matches(text string, rule preppedKeywordRule) (bool,
 		}
 		return true, matchedKeywords, nil
 	case "OR":
+		matchFound := false
 		for i, re := range regexpsToUse {
 			if re == nil {
 				return false, nil, fmt.Errorf("nil regular expression found in rule for category %q at index %d. This indicates a failed compilation during initialization", rule.Name, i)
 			}
 			if re.MatchString(text) {
-				return true, []string{rule.OriginalKeywords[i]}, nil
+				matchFound = true
+				matchedKeywords = append(matchedKeywords, rule.OriginalKeywords[i])
 			}
+		}
+		if matchFound {
+			return true, matchedKeywords, nil
 		}
 		return false, nil, nil
 	case "NOR":

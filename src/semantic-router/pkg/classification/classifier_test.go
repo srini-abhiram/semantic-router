@@ -845,6 +845,19 @@ func TestKeywordClassifier(t *testing.T) {
 			},
 		},
 		{
+			name:     "Case insensitive OR match",
+			text:     "This is URGENT",
+			expected: "test-urgent",
+			rules: []config.KeywordRule{
+				{
+					Name:          "test-urgent",
+					Operator:      "OR",
+					Keywords:      []string{"urgent"},
+					CaseSensitive: false,
+				},
+			},
+		},
+		{
 			name:     "Regex word boundary - partial match should not match",
 			text:     "this is a secretary meeting",
 			expected: "test-category-3", // "secret" rule (test-category-secret) won't match, falls through to NOR
