@@ -67,7 +67,7 @@ keyword_rules:
     case_sensitive: false
   - name: "sensitive_data"
     operator: "AND"
-    keywords: ["SSN", "social security number", "credit card"]
+    keywords: ["SSN", "credit card"]
     case_sensitive: false
   - name: "exclude_spam"
     operator: "NOR"
@@ -234,7 +234,7 @@ decisions:
 
   - name: "exclude_spam_decision"
     description: "Potential spam or suspicious requests"
-    priority: 150
+    priority: 50
     rules:
       operator: "AND"
       conditions:
