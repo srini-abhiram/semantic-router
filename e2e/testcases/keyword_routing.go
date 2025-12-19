@@ -196,13 +196,13 @@ func testSingleKeywordRouting(ctx context.Context, testCase KeywordRoutingCase, 
 	// Extract routing headers
 	// For keyword routing, use x-vsr-selected-decision since x-vsr-selected-category
 	// is only set for domain-based routing. The decision name format is "{category}_decision"
-	decision := resp.Header.Get("x-vsr-selected-decision")
+	decision := strings.TrimSpace(resp.Header.Get("x-vsr-selected-decision"))
 	if decision != "" {
 		// Extract category from decision name (e.g., "urgent_request_decision" -> "urgent_request")
 		result.ActualCategory = strings.TrimSuffix(decision, "_decision")
 	} else {
 		// Fallback to x-vsr-selected-category for domain-based routing
-		result.ActualCategory = resp.Header.Get("x-vsr-selected-category")
+		result.ActualCategory = strings.TrimSpace(resp.Header.Get("x-vsr-selected-category"))
 	}
 
 	// Parse matched keywords from header (assuming comma-separated)
