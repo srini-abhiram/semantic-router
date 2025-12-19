@@ -712,10 +712,11 @@ func (c *Classifier) EvaluateDecisionWithEngine(text string) (*decision.Decision
 
 	// Evaluate decisions with all signals
 	result, err := engine.EvaluateDecisionsWithSignals(&decision.SignalMatches{
-		KeywordRules:   signals.MatchedKeywordRules,
-		EmbeddingRules: signals.MatchedEmbeddingRules,
-		DomainRules:    signals.MatchedDomainRules,
-		FactCheckRules: signals.MatchedFactCheckRules,
+		KeywordRules:    signals.MatchedKeywordRules,
+		MatchedKeywords: signals.MatchedKeywords,
+		EmbeddingRules:  signals.MatchedEmbeddingRules,
+		DomainRules:     signals.MatchedDomainRules,
+		FactCheckRules:  signals.MatchedFactCheckRules,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("decision evaluation failed: %w", err)
