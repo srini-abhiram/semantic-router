@@ -77,7 +77,7 @@ func (r *OpenAIRouter) handleCaching(ctx *RequestContext, categoryName string) (
 				"threshold":  threshold,
 			})
 			// Return immediate response from cache
-			response := http.CreateCacheHitResponse(cachedResponse, ctx.ExpectStreamingResponse, categoryName, ctx.VSRSelectedDecisionName)
+			response := http.CreateCacheHitResponse(cachedResponse, ctx.ExpectStreamingResponse, categoryName, ctx.VSRSelectedDecisionName, ctx.VSRMatchedKeywords)
 			ctx.TraceContext = spanCtx
 			return response, true
 		}

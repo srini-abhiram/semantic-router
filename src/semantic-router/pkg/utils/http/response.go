@@ -255,7 +255,7 @@ func CreateJailbreakViolationResponse(jailbreakType string, confidence float32, 
 }
 
 // CreateCacheHitResponse creates an immediate response from cache
-func CreateCacheHitResponse(cachedResponse []byte, isStreaming bool, category string, decisionName string) *ext_proc.ProcessingResponse {
+func CreateCacheHitResponse(cachedResponse []byte, isStreaming bool, category string, decisionName string, matchedKeywords []string) *ext_proc.ProcessingResponse {
 	var responseBody []byte
 	var contentType string
 
@@ -338,6 +338,16 @@ func CreateCacheHitResponse(cachedResponse []byte, isStreaming bool, category st
 			},
 		},
 		Body: responseBody,
+	}
+
+	// Add matched keywords header if available
+	if len(matchedKeywords) > 0 {
+		immediateResponse.Headers.SetHeaders = append(immediateResponse.Headers.SetHeaders, &core.HeaderValueOption{
+			Header: &core.HeaderValue{
+				Key:      headers.VSRMatchedKeywords,
+				RawValue: []byte(strings.Join(matchedKeywords, ",")),
+			},
+		})
 	}
 
 	return &ext_proc.ProcessingResponse{
